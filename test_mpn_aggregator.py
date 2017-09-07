@@ -25,7 +25,7 @@ class MPNAggregatorTests(unittest.TestCase):
 
     def test_update(self):
         aggregator = MPNAggregator(2)
-        panasonic = generate_mpn("TSR-1002:Panasonic:A1,D2")
+        panasonic = generate_mpn("TSR-1002:Panasonic:A1")
         panasonic_key = aggregator._generate_key(panasonic)
         keystone = generate_mpn("A1,B2,C8;TSR-1002;Keystone")
         keystone_key = aggregator._generate_key(keystone)
@@ -37,10 +37,11 @@ class MPNAggregatorTests(unittest.TestCase):
         assert panasonic in aggregator.results
         assert panasonic_key in aggregator._results_keys
 
-        # Ensure existing MPN is updated
+        # Ensure existing MPN is updated (occurrences and designators)
         panasonic = generate_mpn("TSR-1002:Panasonic:A1,D2")
         aggregator.update(panasonic)
         assert aggregator.results[0].occurrences == 2
+        assert aggregator.results[0].designators == set(["A1", "D2"])
 
         aggregator.update(garbage)
         aggregator.update(garbage)
